@@ -652,6 +652,9 @@ PODS:
     - FirebaseAnalytics (~> 10.11.0)
   - Firebase/CoreOnly (10.11.0):
     - FirebaseCore (= 10.11.0)
+  - Firebase/Database (10.11.0):
+    - Firebase/CoreOnly
+    - FirebaseDatabase (~> 10.11.0)
   - Firebase/Firestore (10.11.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.11.0)
@@ -679,6 +682,9 @@ PODS:
     - GoogleUtilities/Logger (~> 7.8)
   - FirebaseCoreInternal (10.11.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
+  - FirebaseDatabase (10.11.0):
+    - FirebaseCore (~> 10.0)
+    - leveldb-library (~> 1.22)
   - FirebaseFirestore (10.11.0):
     - abseil/algorithm (~> 1.20220623.0)
     - abseil/base (~> 1.20220623.0)
@@ -1224,6 +1230,10 @@ PODS:
   - RNFBApp (18.1.0):
     - Firebase/CoreOnly (= 10.11.0)
     - React-Core
+  - RNFBDatabase (18.1.0):
+    - Firebase/Database (= 10.11.0)
+    - React-Core
+    - RNFBApp
   - RNFBFirestore (18.1.0):
     - Firebase/Firestore (= 10.11.0)
     - nanopb (< 2.30910.0, >= 2.30908.0)
@@ -1298,6 +1308,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
+  - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1310,6 +1321,7 @@ SPEC REPOS:
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseCoreInternal
+    - FirebaseDatabase
     - FirebaseFirestore
     - FirebaseInstallations
     - Flipper
@@ -1403,6 +1415,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
+  RNFBDatabase:
+    :path: "../node_modules/@react-native-firebase/database"
   RNFBFirestore:
     :path: "../node_modules/@react-native-firebase/firestore"
   Yoga:
@@ -1420,6 +1434,7 @@ SPEC CHECKSUMS:
   FirebaseAnalytics: 6c6bf99e8854475bf1fa342028841be8ecd236da
   FirebaseCore: 62fd4d549f5e3f3bd52b7998721c5fa0557fb355
   FirebaseCoreInternal: 9e46c82a14a3b3a25be4e1e151ce6d21536b89c0
+  FirebaseDatabase: 4e1cb7f44ce6ffa553033913dd0d634b2310ce65
   FirebaseFirestore: 09be82b113fbcb225b9797d2c525ae8886abc7a3
   FirebaseInstallations: 2a2c6859354cbec0a228a863d4daf6de7c74ced4
   Flipper: 26fc4b7382499f1281eb8cb921e5c3ad6de91fe0
@@ -1471,6 +1486,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: c5c89f8f543842dd864b63ded1b0bbb9c9445328
   ReactCommon: dbfbe2f7f3c5ce4ce44f43f2fd0d5950d1eb67c5
   RNFBApp: 81a9593ff681b448d1847f5d5493906310cdebe3
+  RNFBDatabase: 0464920901f4d9d1881a88f1c4ac22c463d6280b
   RNFBFirestore: 2e1bebf2b621348e1ae696309297e1f683eb1178
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: d56980c8914db0b51692f55533409e844b66133c
