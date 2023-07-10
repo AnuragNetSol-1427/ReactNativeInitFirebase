@@ -53,17 +53,25 @@ export default function App() {
   // Now, creation of todo app in realtime database
   const [inputTextValue, setInputTextValue] = useState(null);
   const [list, setList] = useState(null);
+  const [isUpdateData, setIsUpdateData] = useState(false);
+  const [selectedCardIndex, setSelectedCardIndex] = useState(null);
+  const [showError, setShowError] = useState(false);
 
   // Add data to firebase realtime database
   const handleAddData = async () => {
     try {
-      const index = list.length;
-      const response = await database().ref(`todo/${index}`).set({
-        value: inputTextValue,
-      });
-      console.log(response);
-      setInputTextValue("");
-
+      if(inputTextValue.length > 0) {
+        const index = list.length;
+        const response = await database().ref(`todo/${index}`).set({
+          value: inputTextValue,
+        });
+        console.log(response);
+        setInputTextValue('');
+        setShowError(false);
+      }
+      else {
+        setShowError(true)
+      }
     } catch (error) {
       console.log(error);
     }
@@ -77,16 +85,52 @@ export default function App() {
   const getDatabase = async () => {
     try {
       // const data = await database().ref('todo').once('value');
-      const data = await database().ref('todo').on('value', (tempData)=>{
-        console.log(data);
-      setList(tempData.val());
-      });
+      const data = await database()
+        .ref('todo')
+        .on('value', tempData => {
+          console.log(data);
+          setList(tempData.val());
+        });
       // console.log(data);
       // setList(data.val());
     } catch (error) {
       console.log(error);
     }
   };
+
+  // Update data to firebase realtime database
+  const handleUpdateData = async () => {
+    try {
+     if(inputTextValue.length  > 0) {
+      const response = await database().ref(`todo/${selectedCardIndex}`).update({
+        value: inputTextValue
+      })
+
+      setInputTextValue("");
+      setIsUpdateData(false)
+      setShowError(false);
+
+      console.log(response)
+     }
+     else{
+      setShowError(true);
+     }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleCardPress = async (cardIndex, cardValue) => {
+    try {
+      setIsUpdateData(true)
+      setSelectedCardIndex(cardIndex)
+      setInputTextValue(cardValue)
+      console.log(cardIndex)
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -101,13 +145,26 @@ export default function App() {
           value={inputTextValue}
           onChangeText={val => setInputTextValue(val)}
         />
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => {
-            handleAddData();
-          }}>
-          <Text style={{color: 'white'}}>Add</Text>
-        </TouchableOpacity>
+        {
+          showError ? <Text style={{fontSize: 12, color: 'red', marginBottom: 5}}>Enter some todo</Text> :  ""
+        }
+        {!isUpdateData ? (
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => {
+              handleAddData();
+            }}>
+            <Text style={{color: 'white'}}>Add</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => {
+              handleUpdateData();
+            }}>
+            <Text style={{color: 'white'}}>Update</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={styles.cardContainer}>
@@ -119,13 +176,14 @@ export default function App() {
           data={list}
           renderItem={item => {
             // console.log(item);
+            const cardIndex = item.index;
 
-            if(item.item !== null) {
-            return (
-              <View style={styles.card}>
-                <Text>{item.item.value}</Text>
-              </View>
-            );
+            if (item.item !== null) {
+              return (
+                <TouchableOpacity style={styles.card} onPress={() => handleCardPress(cardIndex, item.item.value)}>
+                  <Text>{item.item.value}</Text>
+                </TouchableOpacity>
+              );
             }
           }}
         />
@@ -145,7 +203,8 @@ const styles = StyleSheet.create({
     width: width - 30,
     borderRadius: 15,
     borderWidth: 2,
-    marginVertical: 10,
+    marginTop: 10,
+    marginBottom: 10,
     padding: 10,
   },
   addButton: {
