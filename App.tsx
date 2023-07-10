@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   StatusBar,
   FlatList,
+  Alert,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
@@ -132,6 +133,36 @@ export default function App() {
     }
   }
 
+  const handleCardLongPress = async (cardIndex, cardValue) => {
+    try {
+      
+      Alert.alert("Alert", `Are You Sure To Delete ${cardValue} ?`, [
+        {
+          text: "Cancel",
+          onPress: () => {
+            console.log("Cancel Is Press")
+          }
+        },
+        {
+          text: 'Ok',
+          onPress: async () => {
+            try {
+              const response = await database().ref(`todo/${cardIndex}`).remove();
+              console.log(response)
+              setInputTextValue("");
+              setIsUpdateData(false);
+            } catch (error) {
+              console.log(error)
+            }
+          }
+        },
+      ]);
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
@@ -180,7 +211,8 @@ export default function App() {
 
             if (item.item !== null) {
               return (
-                <TouchableOpacity style={styles.card} onPress={() => handleCardPress(cardIndex, item.item.value)}>
+                <TouchableOpacity style={styles.card} onPress={() => handleCardPress(cardIndex, item.item.value)}
+                onLongPress={() => handleCardLongPress(cardIndex, item.item.value)}>
                   <Text>{item.item.value}</Text>
                 </TouchableOpacity>
               );
